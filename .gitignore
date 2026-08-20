@@ -1,0 +1,5 @@
+# Python Related Ignore
+.venv/
+__pycache__/
+*.py[cod]
+
