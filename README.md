@@ -86,6 +86,28 @@ The current bootstrap application should print:
 Hello from oba!
 ```
 
+### Quality checks
+
+Synchronize the locked development environment:
+
+```sh
+uv sync --locked
+```
+
+Check Python source for lint violations:
+
+```sh
+uv run --locked ruff check src
+```
+
+Verify that Python source matches Ruff's formatter:
+
+```sh
+uv run --locked ruff format --check src
+```
+
+These commands are check-only and do not modify source files. GitHub Actions runs the same checks on pushes and pull requests.
+
 ## Durable principles
 
 - Metrics are aggregate operating signals, not an event log or business database.

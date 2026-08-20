@@ -52,6 +52,38 @@ Each milestone follows the same loop:
 
 A milestone is complete only when its acceptance evidence is demonstrated. A screenshot alone is weak evidence; pair it with the query, target state, test, or event history that explains it.
 
+### Progressive automation and risk gates
+
+Introduce an automated gate when the project first creates the failure risk that the gate controls. Do not add speculative workflows merely because a tool exists. Each gate begins as a learner-run local command, is reproduced as read-only CI, is exercised with a controlled failure and recovery, and becomes a required status check only after it is stable.
+
+| Risk first introduced | First relevant milestone | Minimum automated gate | Evidence required before enforcement |
+| --- | --- | --- | --- |
+| Shared Python source and tool configuration | Milestone 1 preparation | Locked Ruff lint and formatting checks | Local pass, intentional lint failure, CI failure, fix, and CI recovery |
+| Installable package, build backend, and CLI entry point | Milestone 1 | Build the package, install it in a clean environment, and smoke-test the entry point | The built artifact—not the working tree—starts successfully |
+| API behavior and request contracts | Milestone 1 | Unit and contract tests | A meaningful behavior regression fails before the fix and passes afterward |
+| Third-party runtime or development dependencies | Milestone 1 and later | Locked synchronization plus pull-request dependency review where GitHub supports it | A stale lockfile fails; a dependency change is visible and reviewed |
+| Substantial Python application attack surface | Milestone 1 or 2, when real behavior exists | Python code scanning | One finding or controlled insecure example is triaged without treating the scanner as proof of safety |
+| Temporal Workflow and Activity semantics | Milestone 2 | Workflow, replay, retry, and idempotency tests | Nondeterminism or duplicate-side-effect risk is reproduced and prevented |
+| Grafana dashboards and provisioning | Milestone 5 | Provisioning/load validation and deterministic dashboard generation checks | A malformed or drifting dashboard fails before deployment |
+| Prometheus recording rules | Milestone 6 | `promtool` syntax and rule tests | No-traffic, reset, missing-series, and wrong-aggregation cases are exercised |
+| Alert rules and Alertmanager configuration | Milestone 7 | Rule tests plus configuration validation | Pending, firing, recovery, routing, and inhibition behavior are demonstrated |
+| Docker image | Milestone 8 | Build without publishing on pull requests; smoke-test the image | The image starts from a clean build and a broken image fails the gate |
+| Kubernetes manifests or packaging | Milestone 8 | Render, schema, ownership/policy, and immutable-reference validation | A malformed resource or unsafe rollout choice is rejected before cluster mutation |
+| Release artifact | Milestone 12 or first external release | Versioned build, checksums, provenance attestation, and verification | A consumer can verify which commit and workflow produced the artifact |
+| Deployment credentials or environment mutation | First deployment milestone | Protected environment, least-privilege identity, concurrency control, and explicit approval | A non-approved run cannot mutate the environment; rollback is demonstrated |
+
+Before adding or strengthening a gate, answer:
+
+1. Which concrete failure or operator risk does it prevent?
+2. What is the equivalent local command or reproducible test?
+3. Can the pull-request check remain read-only and secret-free?
+4. Which controlled failure proves the gate detects the intended problem?
+5. What evidence proves recovery rather than only failure?
+6. Are external actions pinned to full commit SHAs and tool versions intentionally controlled?
+7. Is the signal stable enough to become a required status check without blocking unrelated work?
+
+At each milestone review, add only the rows whose risks now exist. The relevant automation evidence becomes part of that milestone's acceptance gate; future rows remain roadmap items rather than prerequisites.
+
 ## 5. Milestone map
 
 | Milestone | Focus | Approximate effort | Demonstration |
