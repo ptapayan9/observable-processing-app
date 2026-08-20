@@ -1,0 +1,14 @@
+[project]
+name = "oba"
+version = "0.1.0"
+description = "observable-app utulizing temporal, prometheus, grafana and kubernetes"
+authors = [{ name = "ptapayan9", email = "patrickedwardtapayan9@gmail.com" }]
+requires-python = ">=3.13"
+dependencies = []
+
+[project.scripts]
+oba = "oba:main"
+
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13.0"]
+build-backend = "uv_build"
