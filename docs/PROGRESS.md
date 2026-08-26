@@ -2,10 +2,10 @@
 
 ## Current state
 
-- Current milestone: Milestone 0 — first-principles design
-- Current task: Write the problem statement and architecture decision record described in the learning path.
+- Current milestone: Milestone 1 preparation — Milestone 0 intentionally deferred
+- Current task: OBA-16 — build and smoke-test the OBA package from clean artifacts.
 - Last demonstrated evidence: None yet
-- Open question: Document and defend the Python trade-offs in the Milestone 0 architecture decision record.
+- Open question: Complete the deferred Milestone 0 architecture and signal-ownership evidence before beginning OBA-4 application implementation.
 
 ## Milestone gates
 
@@ -35,5 +35,6 @@ Add one entry only after a demonstration.
 
 | Date | Decision | Reason | Revisit when |
 | --- | --- | --- | --- |
+| 2026-08-21 | Intentionally defer Milestone 0 and continue with the OBA-16 packaging and CI gate. | Prioritize completing the repository's package-build and clean-artifact CI foundation while accepting that the architecture, signal-ownership, and Milestone 0 acceptance evidence remain unverified. | Before beginning OBA-4 application implementation. |
 | 2026-08-20 | Use Python for the API and Temporal Worker. | The learner chose Python and demonstrated a Python 3.13 project managed by uv; the Milestone 0 ADR still needs to defend the trade-off. | If performance, ecosystem, or operational evidence challenges the choice. |
 | 2026-08-20 | Introduce each automation gate when its corresponding project risk first appears. | Keeps CI proportional to the system while requiring a local command, controlled failure, recovery evidence, least privilege, and reproducible dependencies before enforcement. | At every milestone review and whenever a new artifact, dependency, execution model, or deployment boundary is introduced. |

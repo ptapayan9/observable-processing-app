@@ -108,6 +108,44 @@ uv run --locked ruff format --check src
 
 These commands are check-only and do not modify source files. GitHub Actions runs the same checks on pushes and pull requests.
 
+### Package build and clean-artifact smoke test
+
+Verify that the committed lockfile agrees with the project configuration, then build both the source distribution and wheel through the configured build backend:
+
+```sh
+uv lock --check
+uv build
+```
+
+The build writes both artifact formats under `dist/`:
+
+```text
+dist/oba-0.1.0.tar.gz
+dist/oba-0.1.0-py3-none-any.whl
+```
+
+Create a fresh Python 3.13 environment outside the repository and install only the built wheel into it:
+
+```sh
+oba_smoke_dir="$(mktemp -d /tmp/oba-smoke.XXXXXX)"
+uv venv --python 3.13 "$oba_smoke_dir/venv"
+uv pip install --python "$oba_smoke_dir/venv/bin/python" dist/*.whl
+```
+
+Invoke the installed command from outside the repository checkout:
+
+```sh
+(
+  cd /tmp
+  "$oba_smoke_dir/venv/bin/oba"
+)
+
+# Expected output:
+# Hello from oba!
+```
+
+This smoke test proves that the tested wheel can be installed and started without borrowing OBA source or dependencies from the repository `.venv`. It does not prove complete application behavior, portability across every supported host, security, or production readiness. GitHub Actions reproduces the same build and clean-install boundary without publishing the generated artifacts.
+
 ## Durable principles
 
 - Metrics are aggregate operating signals, not an event log or business database.
